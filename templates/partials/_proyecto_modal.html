@@ -1,0 +1,54 @@
+<!-- Modal de proyecto reutilizable -->
+{% if proyecto.imagenes.all %}
+<div class="modal fade" id="modal{{ proyecto.id }}" tabindex="-1" aria-labelledby="modal{{ proyecto.id }}Label" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-cyber" id="modal{{ proyecto.id }}Label">{{ proyecto.titulo }} · Capturas del Proyecto</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <div id="carousel{{ proyecto.id }}" class="carousel slide" data-bs-ride="carousel">
+          <div class="carousel-indicators">
+            {% for imagen in proyecto.imagenes.all %}
+            <button type="button" data-bs-target="#carousel{{ proyecto.id }}" data-bs-slide-to="{{ forloop.counter0 }}" 
+                    class="{% if forloop.first %}active{% endif %}" 
+                    aria-current="{% if forloop.first %}true{% endif %}" 
+                    aria-label="Captura {{ forloop.counter }}"></button>
+            {% endfor %}
+          </div>
+          <div class="carousel-inner">
+            {% for imagen in proyecto.imagenes.all %}
+            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+              <img src="{{ imagen.imagen.url }}" class="d-block w-100 border rounded" alt="{{ imagen.descripcion }}">
+              <div class="p-3 text-center bg-light mt-2 rounded">
+                <p class="mb-0 fw-semibold text-dark">{{ imagen.descripcion }}</p>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          <button class="carousel-control-prev" type="button" data-bs-target="#carousel{{ proyecto.id }}" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon bg-dark rounded-circle p-3" aria-hidden="true" style="background-size: 50%;"></span>
+            <span class="visually-hidden">Anterior</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#carousel{{ proyecto.id }}" data-bs-slide="next">
+            <span class="carousel-control-next-icon bg-dark rounded-circle p-3" aria-hidden="true" style="background-size: 50%;"></span>
+            <span class="visually-hidden">Siguiente</span>
+          </button>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <a href="{{ proyecto.url_codigo }}" class="btn btn-sm btn-outline-dark" target="_blank" rel="noopener noreferrer">
+          <i class="fab fa-github"></i> Ver en GitHub
+        </a>
+        {% if proyecto.url_demo %}
+        <a href="{{ proyecto.url_demo }}" class="btn btn-sm btn-outline-dark" target="_blank" rel="noopener noreferrer">
+          <i class="fas fa-external-link-alt"></i> Ver sitio
+        </a>
+        {% endif %}
+        <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}

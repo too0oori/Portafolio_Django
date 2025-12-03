@@ -1,0 +1,35 @@
+<!-- Tarjeta de proyecto reutilizable -->
+<div class="col-md-6 col-lg-4 d-flex">
+  <div class="card project-card">
+    <div class="card-body text-center">
+      <h5 class="card-title text-cyber mb-3">{{ proyecto.titulo }}</h5>
+      
+      <div class="mb-3" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#modal{{ proyecto.id }}">
+        <img src="{{ proyecto.imagen_principal.url }}" alt="{{ proyecto.titulo }}" class="img-fluid rounded" loading="lazy" decoding="async">
+        {% if proyecto.imagenes.all %}
+        <p class="text-muted small mt-2 mb-0">
+          <i class="fas fa-images"></i> Click para ver más capturas
+        </p>
+        {% endif %}
+      </div>
+      
+      <p class="card-text text-start mb-3">{{ proyecto.descripcion }}</p>
+      
+      <div class="mb-3 d-flex justify-content-center flex-wrap gap-2">
+        {% for tech in proyecto.get_tecnologias_list %}
+        <span class="badge bg-light text-dark">{{ tech }}</span>
+        {% endfor %}
+      </div>
+      
+      <a href="{{ proyecto.url_codigo }}" class="btn btn-sm btn-outline-dark" target="_blank" rel="noopener noreferrer">
+        <i class="fas fa-external-link-alt"></i> Ver código
+      </a>
+      
+      {% if proyecto.url_demo %}
+      <a href="{{ proyecto.url_demo }}" class="btn btn-sm btn-outline-dark" target="_blank" rel="noopener noreferrer">
+        <i class="fas fa-external-link-alt"></i> Ver sitio
+      </a>
+      {% endif %}
+    </div>
+  </div>
+</div>

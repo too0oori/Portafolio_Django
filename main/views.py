@@ -5,17 +5,22 @@ from .forms import ContactoForm
 
 
 def index(request):
-    """Vista principal del portafolio"""
+    """Vista principal del portafolio - Solo proyectos destacados"""
     
     # Obtener perfil (solo uno)
-    try:
-        perfil = Perfil.objects.first()
-    except Perfil.DoesNotExist:
-        perfil = None
+    perfil = Perfil.objects.first()
     
-    # Obtener proyectos destacados y otros separado
-    proyectos_destacados = Proyecto.objects.filter(activo=True, destacado=True).prefetch_related('imagenes')
-    otros_proyectos = Proyecto.objects.filter(activo=True, destacado=False).prefetch_related('imagenes')
+    # Solo proyectos destacados (máximo 6 para la página principal)
+    proyectos_destacados = Proyecto.objects.filter(
+        activo=True, 
+        destacado=True
+    ).prefetch_related('imagenes')[:6]
+    
+    # Contar proyectos no destacados para mostrar el botón "Ver más"
+    otros_proyectos_count = Proyecto.objects.filter(
+        activo=True, 
+        destacado=False
+    ).count()
     
     # Obtener habilidades por tipo
     habilidades_tecnicas = Habilidad.objects.filter(tipo='tecnica', activo=True)
@@ -36,10 +41,35 @@ def index(request):
     context = {
         'perfil': perfil,
         'proyectos_destacados': proyectos_destacados,
-        'otros_proyectos': otros_proyectos,
+        'otros_proyectos_count': otros_proyectos_count,
         'habilidades_tecnicas': habilidades_tecnicas,
         'habilidades_personales': habilidades_personales,
         'form': form,
     }
     
     return render(request, 'index.html', context)
+
+
+def todos_proyectos(request):
+    """Vista de todos los proyectos (destacados + otros)"""
+    
+    perfil = Perfil.objects.first()
+    
+    # Todos los proyectos activos ordenados
+    proyectos_destacados = Proyecto.objects.filter(
+        activo=True, 
+        destacado=True
+    ).prefetch_related('imagenes')
+    
+    otros_proyectos = Proyecto.objects.filter(
+        activo=True, 
+        destacado=False
+    ).prefetch_related('imagenes')
+    
+    context = {
+        'perfil': perfil,
+        'proyectos_destacados': proyectos_destacados,
+        'otros_proyectos': otros_proyectos,
+    }
+    
+    return render(request, 'proyectos.html', context)

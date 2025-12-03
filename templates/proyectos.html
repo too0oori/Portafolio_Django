@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Todos mis Proyectos · Sofía [tori]{% endblock %}
+{% block meta_description %}Explora todos los proyectos de desarrollo web y aplicaciones creados por Sofía Lagos [tori].{% endblock %}
+
+{% block content %}
+
+<!-- HEADER DE LA PÁGINA -->
+<section class="py-5">
+  <div class="container-aligned">
+    <div class="text-center mb-5">
+      <h1 class="display-4 mb-4">Todos mis proyectos</h1>
+      <p class="text-black">Explora todo lo que he estado desarrollando</p>
+      <a href="{% url 'index' %}" class="btn-personalizado mt-3">
+        <i class="fas fa-arrow-left"></i> Volver al inicio
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- PROYECTOS DESTACADOS -->
+{% if proyectos_destacados %}
+<section class="py-5" style="background: rgba(255,255,255,0.4); backdrop-filter: blur(20px); padding: 4rem 2rem; margin: 3rem auto; border-radius: 8px; max-width: 1200px;">
+  <div class="container-aligned">
+    <div class="row mb-4">
+      <div class="col-12">
+        <h2 class="display-6 section-title">
+          <i class="fas fa-star text-cyber"></i> Proyectos destacados
+        </h2>
+        <p class="text-black">Mis trabajos más importantes</p>
+      </div>
+    </div>
+
+    <div class="row justify-content-center g-4">
+      {% for proyecto in proyectos_destacados %}
+        {% include 'partials/_proyecto_card.html' %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- OTROS PROYECTOS -->
+{% if otros_proyectos %}
+<section class="py-5" style="background: rgba(255,255,255,0.4); backdrop-filter: blur(20px); padding: 4rem 2rem; margin: 3rem auto; border-radius: 8px; max-width: 1200px;">
+  <div class="container-aligned">
+    <div class="row mb-4">
+      <div class="col-12">
+        <h2 class="display-6 section-title">
+          <i class="fas fa-code text-cyber"></i> Otros proyectos
+        </h2>
+        <p class="text-black">Más trabajos en los que he participado</p>
+      </div>
+    </div>
+
+    <div class="row justify-content-center g-4">
+      {% for proyecto in otros_proyectos %}
+        {% include 'partials/_proyecto_card.html' %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- MENSAJE SI NO HAY PROYECTOS -->
+{% if not proyectos_destacados and not otros_proyectos %}
+<section class="py-5">
+  <div class="container-aligned text-center">
+    <p class="text-muted">No hay proyectos disponibles aún.</p>
+    <a href="{% url 'index' %}" class="btn-personalizado mt-3">
+      <i class="fas fa-arrow-left"></i> Volver al inicio
+    </a>
+  </div>
+</section>
+{% endif %}
+
+{% endblock %}
+
+{% block modals %}
+<!-- MODALES DE PROYECTOS DESTACADOS -->
+{% for proyecto in proyectos_destacados %}
+  {% include 'partials/_proyecto_modal.html' %}
+{% endfor %}
+
+<!-- MODALES DE OTROS PROYECTOS -->
+{% for proyecto in otros_proyectos %}
+  {% include 'partials/_proyecto_modal.html' %}
+{% endfor %}
+{% endblock %}
