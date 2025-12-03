@@ -1,38 +1,21 @@
 import os
 from pathlib import Path
-import dj_database_url
 
-
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# -------------------------
+# CONFIGURACIÓN BÁSICA
+# -------------------------
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-kj9#(z5$1!(qo+l1ybdaxeif-giin_q@puf-07v9u)4&%5ic4y'
-DEBUG = os.environ.get('DEBUG', 'False') == 'True'
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
-# Para producción en Render
-if not DEBUG:
-    # Seguridad
-    SECURE_SSL_REDIRECT = True
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
-    SECURE_BROWSER_XSS_FILTER = True
-    SECURE_CONTENT_TYPE_NOSNIFF = True
-    X_FRAME_OPTIONS = 'DENY'
-    
-    # WhiteNoise para archivos estáticos
-    MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+DEBUG = True  # Para desarrollo local
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
-
-# Application definition
+# -------------------------
+# APPS
+# -------------------------
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -41,8 +24,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'main'
+    'main',
 ]
+
+# -------------------------
+# MIDDLEWARE
+# -------------------------
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -53,6 +40,10 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+# -------------------------
+# ROOT / TEMPLATES / WSGI
+# -------------------------
 
 ROOT_URLCONF = 'portafolio.urls'
 
@@ -73,35 +64,24 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'portafolio.wsgi.application'
 
+# -------------------------
+# DATABASE (LOCAL)
+# -------------------------
 
-# Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
-# Opción 1: Usando variable de entorno (producción)
-if 'DATABASE_URL' in os.environ:
-    DATABASES = {
-        'default': dj_database_url.config(
-            default=os.environ.get('DATABASE_URL'),
-            conn_max_age=600,
-            conn_health_checks=True,
-        )
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'portafolio_db',
+        'USER': 'postgres',
+        'PASSWORD': 'root',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
-# Opción 2: PostgreSQL local (desarrollo)
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': 'portafolio_db',
-            'USER': 'postgres',
-            'PASSWORD': 'root',
-            'HOST': 'localhost',
-            'PORT': '5432',
-        }
-    }
+}
 
-
-# Password validation
-# https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
+# -------------------------
+# PASSWORD VALIDATION
+# -------------------------
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -118,9 +98,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-# Internationalization
-# https://docs.djangoproject.com/en/5.2/topics/i18n/
+# -------------------------
+# INTERNACIONALIZACIÓN
+# -------------------------
 
 LANGUAGE_CODE = 'es-cl'
 
@@ -130,29 +110,31 @@ USE_I18N = True
 
 USE_TZ = True
 
+# -------------------------
+# STATIC & MEDIA
+# -------------------------
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
-
-STATIC_URL = 'static/'
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
-
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-# Static files
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# Media files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# Mensajes de Django
+# -------------------------
+# MENSAJES
+# -------------------------
+
 from django.contrib.messages import constants as messages
 MESSAGE_TAGS = {
     messages.SUCCESS: 'alert-success',
     messages.ERROR: 'alert-danger',
+    messages.WARNING: 'alert-warning',
+    messages.INFO: 'alert-info',
 }
+
+# -------------------------
+# DEFAULT PRIMARY KEY
+# -------------------------
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
