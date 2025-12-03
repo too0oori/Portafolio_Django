@@ -40,4 +40,4 @@ def index(request):
         'form': form,
     }
     
-    return render(request, 'main/index.html', context)
+    return render(request, 'index.html', context)

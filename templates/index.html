@@ -1,0 +1,330 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es" style="scroll-behavior: smooth;">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Portafolio Sofía [tori] · Desarrolladora Full Stack Python.">
+  <title>Sofía [tori] · Desarrolladora Full Stack</title>
+  
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"> 
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Prata&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+  
+  <div class="blob-outer-container">
+    <div class="blob-inner-container">
+      <div class="blob"></div>
+    </div>
+  </div>
+
+  <div class="main-wrapper">
+    
+    <nav class="navbar-personalizado">
+      <button id="btn-menu" class="btn-menu" aria-label="Abrir menú de navegación" aria-expanded="false">
+        <i class="fas fa-bars"></i>
+      </button>
+      <ul class="navbar-lista" id="navbar-lista">
+        <li><a href="#inicio" class="nav-link">Inicio</a></li>
+        <li><a href="#habilidades" class="nav-link">Habilidades</a></li>
+        <li><a href="#proyectos" class="nav-link">Proyectos</a></li>
+        <li><a href="#contacto" class="nav-link">Contacto</a></li>
+      </ul>
+    </nav>
+
+    <!-- MENSAJES DE DJANGO -->
+    {% if messages %}
+    <div class="container-aligned mb-4">
+      {% for message in messages %}
+      <div class="alert {{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- SECCIÓN HERO - DATOS DINÁMICOS -->
+    <section id="inicio" class="hero-section">
+      <div class="container-aligned">
+        <div class="row">
+          <div class="col-lg-8">
+            {% if perfil %}
+            <h1 class="display-4 mb-4">Hola, soy {{ perfil.nombre_completo }} [{{ perfil.apodo }}] &#x2734;&#xFE0E;</h1>
+            <h5 class="mb-4">{{ perfil.titulo }}</h5>
+            <p class="mb-5">{{ perfil.descripcion|linebreaks }}</p>
+            {% else %}
+            <h1 class="display-4 mb-4">Hola, soy Sofía [tori] &#x2734;&#xFE0E;</h1>
+            <h5 class="mb-4">desarrolladora full stack python · artista visual</h5>
+            <p class="mb-5">
+              Me llamo Sofía Lagos, pero me conocen más como Tori, soy artista de profesión y desarrolladora en formación.
+              Me apasiona crear experiencias web completas.
+            </p>
+            {% endif %}
+            <div class="d-flex gap-3 flex-wrap mb-4">
+              <a href="#proyectos" class="btn-personalizado">Ver mis proyectos</a>
+              <a href="#contacto" class="btn-personalizado">Contáctame</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCIÓN PROYECTOS - DATOS DINÁMICOS -->
+    <section id="proyectos" class="py-5">
+      <div class="container-aligned">
+        <div class="row mb-5">
+          <div class="col-12">
+            <h2 class="display-5 section-title">&#x2734;&#xFE0E;· mis proyectos</h2>
+            <p class="text-black">Estos son algunos proyectos en los que he estado trabajando</p>
+          </div>
+        </div>
+
+        <div class="row justify-content-center g-4">
+          {% for proyecto in proyectos %}
+          <div class="col-md-6 col-lg-4 d-flex">
+            <div class="card project-card">
+              <div class="card-body text-center">
+                <h5 class="card-title text-cyber mb-3">{{ proyecto.titulo }}</h5>
+                
+                <div class="mb-3" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#modal{{ proyecto.id }}">
+                  <img src="{{ proyecto.imagen_principal.url }}" alt="{{ proyecto.titulo }}" class="img-fluid rounded" loading="lazy" decoding="async">
+                  {% if proyecto.imagenes.all %}
+                  <p class="text-muted small mt-2 mb-0">
+                    <i class="fas fa-images"></i> Click para ver más capturas
+                  </p>
+                  {% endif %}
+                </div>
+                
+                <p class="card-text text-start mb-3">{{ proyecto.descripcion }}</p>
+                
+                <div class="mb-3 d-flex justify-content-center flex-wrap gap-2">
+                  {% for tech in proyecto.get_tecnologias_list %}
+                  <span class="badge bg-light text-dark">{{ tech }}</span>
+                  {% endfor %}
+                </div>
+                
+                <a href="{{ proyecto.url_codigo }}" class="btn btn-sm btn-outline-dark" target="_blank" rel="noopener noreferrer">
+                  <i class="fas fa-external-link-alt"></i> Ver código
+                </a>
+                
+                {% if proyecto.url_demo %}
+                <a href="{{ proyecto.url_demo }}" class="btn btn-sm btn-outline-dark" target="_blank" rel="noopener noreferrer">
+                  <i class="fas fa-external-link-alt"></i> Ver sitio
+                </a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+          {% empty %}
+          <div class="col-12">
+            <p class="text-center text-muted">No hay proyectos disponibles. <a href="/admin/">Agregar proyectos</a></p>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCIÓN HABILIDADES - DATOS DINÁMICOS -->
+    <section id="habilidades" class="py-5">
+      <div class="container-aligned">
+        <div class="row mb-5">
+          <div class="col-12">
+            <h2 class="display-5 section-title">mis habilidades ·&#x2734;&#xFE0E;</h2>
+            <p class="text-black">lo que estoy aprendiendo y desarrollando</p>
+          </div>
+        </div>
+        <div class="row g-4">
+          <div class="col-md-6">
+            <div class="skill-card">
+              <h4 class="text-cyber mb-4">[ habilidades técnicas ]</h4>
+              <div class="code-tags">
+                {% for habilidad in habilidades_tecnicas %}
+                <div class="code-tag">{{ habilidad.icono }} {{ habilidad.nombre }}</div>
+                {% empty %}
+                <p class="text-muted">No hay habilidades técnicas. <a href="/admin/">Agregar habilidades</a></p>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="skill-card">
+              <h4 class="text-cyber mb-4">[ habilidades personales ]</h4>
+              <div class="skill-list">
+                {% for habilidad in habilidades_personales %}
+                <div class="skill-item">
+                  <div class="skill-icon">{{ habilidad.icono }}</div>
+                  <span>{{ habilidad.nombre }}</span>
+                </div>
+                {% empty %}
+                <p class="text-muted">No hay habilidades personales. <a href="/admin/">Agregar habilidades</a></p>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCIÓN CONTACTO - FORMULARIO DJANGO -->
+    <section id="contacto" class="py-5">
+      <div class="container-aligned">
+        <div class="row">
+          <div class="col-12">
+            <h2 class="display-5 section-title mb-5">contáctame</h2>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <form method="POST">
+              {% csrf_token %}
+              
+              <div class="mb-3">
+                {{ form.nombre.label_tag }}
+                {{ form.nombre }}
+              </div>
+
+              <div class="mb-3">
+                {{ form.email.label_tag }}
+                {{ form.email }}
+              </div>
+
+              <div class="mb-3">
+                {{ form.mensaje.label_tag }}
+                {{ form.mensaje }}
+              </div>
+              
+              <button type="submit" class="btn-personalizado">Enviar</button>
+            </form>
+          </div>
+          
+          <div class="col-md-6 text-center d-none d-md-flex align-items-center justify-content-center">
+            <div class="contacto-ilustracion-container">
+              {% if perfil.ilustracion_contacto %}
+              <img src="{{ perfil.ilustracion_contacto.url }}" class="contacto-ilustracion" alt="Ilustración de contacto">
+              {% else %}
+              <img src="{% static 'img/dibujo.svg' %}" class="contacto-ilustracion" alt="Ilustración de contacto">
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER - DATOS DINÁMICOS -->
+    <footer>
+      <section id="redes" class="py-3">
+        <div class="container text-center">
+          <div class="row justify-content-center">
+            <div class="col-lg-6">
+              <h3 class="text-cyber mb-3">¡Conectemos!</h3>
+              <p class="text-black mb-4">Estoy siempre abierta a aprender y colaborar</p>
+              <div class="d-flex justify-content-center gap-3 mb-3">
+                {% if perfil %}
+                <a href="{{ perfil.github_url }}" class="social-link" target="_blank" rel="noopener noreferrer">
+                  <i class="fab fa-github fa-lg"></i>
+                </a>
+                <a href="mailto:{{ perfil.email }}" class="social-link">
+                  <i class="fas fa-envelope fa-lg"></i>
+                </a>
+                {% if perfil.linkedin_url %}
+                <a href="{{ perfil.linkedin_url }}" class="social-link" target="_blank" rel="noopener noreferrer">
+                  <i class="fab fa-linkedin fa-lg"></i>
+                </a>
+                {% endif %}
+                {% else %}
+                <a href="https://github.com/too0oori" class="social-link" target="_blank" rel="noopener noreferrer">
+                  <i class="fab fa-github fa-lg"></i>
+                </a>
+                <a href="mailto:sofia.lagos.cesped@gmail.com" class="social-link">
+                  <i class="fas fa-envelope fa-lg"></i>
+                </a>
+                {% endif %}
+              </div>
+              <p class="text-cyber small">✦ ✦ ✦</p>
+              <p class="text-black small">© 2025 Sofía Lagos. Todos los derechos reservados.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </footer>
+  </div>
+
+  <button type="button" class="btn btn-primary btn-floating btn-lg" id="btn-back-to-top">
+    <i class="fas fa-arrow-up"></i>
+  </button>
+
+  <!-- MODALES DE PROYECTOS - DINÁMICOS -->
+  {% for proyecto in proyectos %}
+  {% if proyecto.imagenes.all %}
+  <div class="modal fade" id="modal{{ proyecto.id }}" tabindex="-1" aria-labelledby="modal{{ proyecto.id }}Label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title text-cyber" id="modal{{ proyecto.id }}Label">{{ proyecto.titulo }} · Capturas del Proyecto</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          
+          <div id="carousel{{ proyecto.id }}" class="carousel slide" data-bs-ride="carousel">
+            
+            <div class="carousel-indicators">
+              {% for imagen in proyecto.imagenes.all %}
+              <button type="button" data-bs-target="#carousel{{ proyecto.id }}" data-bs-slide-to="{{ forloop.counter0 }}" 
+                      class="{% if forloop.first %}active{% endif %}" 
+                      aria-current="{% if forloop.first %}true{% endif %}" 
+                      aria-label="Captura {{ forloop.counter }}"></button>
+              {% endfor %}
+            </div>
+            
+            <div class="carousel-inner">
+              {% for imagen in proyecto.imagenes.all %}
+              <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                <img src="{{ imagen.imagen.url }}" class="d-block w-100 border rounded" alt="{{ imagen.descripcion }}">
+                <div class="p-3 text-center bg-light mt-2 rounded">
+                  <p class="mb-0 fw-semibold text-dark">{{ imagen.descripcion }}</p>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+            
+            <button class="carousel-control-prev" type="button" data-bs-target="#carousel{{ proyecto.id }}" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon bg-dark rounded-circle p-3" aria-hidden="true" style="background-size: 50%;"></span>
+              <span class="visually-hidden">Anterior</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carousel{{ proyecto.id }}" data-bs-slide="next">
+              <span class="carousel-control-next-icon bg-dark rounded-circle p-3" aria-hidden="true" style="background-size: 50%;"></span>
+              <span class="visually-hidden">Siguiente</span>
+            </button>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <a href="{{ proyecto.url_codigo }}" class="btn btn-sm btn-outline-dark" target="_blank" rel="noopener noreferrer">
+            <i class="fab fa-github"></i> Ver en GitHub
+          </a>
+          {% if proyecto.url_demo %}
+          <a href="{{ proyecto.url_demo }}" class="btn btn-sm btn-outline-dark" target="_blank" rel="noopener noreferrer">
+            <i class="fas fa-external-link-alt"></i> Ver sitio
+          </a>
+          {% endif %}
+          <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+  {% endfor %}
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="{% static 'js/script.js' %}"></script>
+
+</body>
+</html>
