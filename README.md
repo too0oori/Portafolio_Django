@@ -63,6 +63,17 @@ Se implementaron componentes reutilizables para mantener el código DRY:
 - Acciones masivas para marcar mensajes como leídos
 - Validaciones que previenen errores (solo un perfil, no eliminar imágenes)
 
+### Imágenes
+
+![Home](docs/home.png)
+![Ver Más](docs/ver_mas.png)
+![Proyectos.html](docs/proyectoshtml.png)
+![Destacados](docs/destacados.png)
+![Otros proyectos](docs/otrosproyectos.png)
+![Más proyectos](docs/otrosproyectos2.png)
+
+
+
 ## Tecnologías utilizadas
 
 - **Backend**: Django 5.2.9, Python 3.x
