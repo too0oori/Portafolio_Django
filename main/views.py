@@ -7,14 +7,15 @@ from .forms import ContactoForm
 def index(request):
     """Vista principal del portafolio"""
     
-    # Obtener perfil
+    # Obtener perfil (solo uno)
     try:
         perfil = Perfil.objects.first()
     except Perfil.DoesNotExist:
         perfil = None
     
-    # Obtener proyectos activos ordenados
-    proyectos = Proyecto.objects.filter(activo=True).prefetch_related('imagenes')
+    # Obtener proyectos destacados y otros separado
+    proyectos_destacados = Proyecto.objects.filter(activo=True, destacado=True).prefetch_related('imagenes')
+    otros_proyectos = Proyecto.objects.filter(activo=True, destacado=False).prefetch_related('imagenes')
     
     # Obtener habilidades por tipo
     habilidades_tecnicas = Habilidad.objects.filter(tipo='tecnica', activo=True)
@@ -34,7 +35,8 @@ def index(request):
     
     context = {
         'perfil': perfil,
-        'proyectos': proyectos,
+        'proyectos_destacados': proyectos_destacados,
+        'otros_proyectos': otros_proyectos,
         'habilidades_tecnicas': habilidades_tecnicas,
         'habilidades_personales': habilidades_personales,
         'form': form,
